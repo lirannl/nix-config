@@ -92,12 +92,18 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
     isNormalUser = true;
     description = "Liran Piade";
     shell = pkgs.nushell;
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "adbusers" ];
   };
   home-manager.users.liran = import ./liran_home.nix;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.packageOverrides = pkgs: {
+    nur = import (builtins.fetchTarball "https://github.com/nix-community/NUR/archive/master.tar.gz") {
+      inherit pkgs;
+    };
+  };
+  programs.adb.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -106,10 +112,11 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
     git
     gcc
     nushell
+    neovim
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
   ];
-
+  environment.variables.EDITOR = "nvim";
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
@@ -122,7 +129,14 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
-
+  services.avahi = {
+  enable = true;
+    publish = {
+      enable = true;
+      addresses = true;
+      workstation = true;
+    };
+  };
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
