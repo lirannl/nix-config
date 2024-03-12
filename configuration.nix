@@ -52,10 +52,12 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
   services.xserver.desktopManager.gnome.enable = true;
   
   services.xserver.desktopManager.gnome = {
-    extraGSettingsOverrides = "
+    extraGSettingsOverrides = ''
       [org.gnome.desktop.screensaver]
       lock-enabled=false
-    ";
+      [org/gnome/desktop/interface]
+      color-scheme = "prefer-dark";
+    '';
   };
 
   # Configure keymap in X11
@@ -104,7 +106,7 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
     };
   };
   programs.adb.enable = true;
-
+  
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -113,6 +115,8 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
     gcc
     nushell
     neovim
+    gnomeExtensions.appindicator
+    gnomeExtensions.gsconnect
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
   ];
