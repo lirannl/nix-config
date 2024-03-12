@@ -16,7 +16,7 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
   boot.loader.efi.canTouchEfiVariables = true;
 
   boot.initrd.luks.devices."luks-7cb9f528-4229-45dd-ab32-5381374ffeab".device = "/dev/disk/by-uuid/7cb9f528-4229-45dd-ab32-5381374ffeab";
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "liran-main"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -50,6 +50,13 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
+  
+  services.xserver.desktopManager.gnome = {
+    extraGSettingsOverrides = "
+      [org.gnome.desktop.screensaver]
+      lock-enabled=false
+    ";
+  };
 
   # Configure keymap in X11
   services.xserver = {
@@ -84,22 +91,10 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
   users.users.liran = {
     isNormalUser = true;
     description = "Liran Piade";
+    shell = pkgs.nushell;
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-      firefox
-    #  thunderbird
-    ];
   };
-home-manager.users.liran = {
-    home.stateVersion = "18.09";
-    home.packages = with pkgs; [neovim];
-    programs.git = {
-      enable = true;
-      userName  = "Liran Piade";
-      userEmail = "liranpiade@gmail.com";
-      defaultBranch = "main";
-    };
-  };
+  home-manager.users.liran = import ./liran_home.nix;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -107,8 +102,10 @@ home-manager.users.liran = {
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-rustup
-git
+    rustup
+    git
+    gcc
+    nushell
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
   ];
@@ -124,7 +121,7 @@ git
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
