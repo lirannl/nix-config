@@ -14,6 +14,7 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot.initrd.luks.devices."luks-7cb9f528-4229-45dd-ab32-5381374ffeab".device = "/dev/disk/by-uuid/7cb9f528-4229-45dd-ab32-5381374ffeab";
   networking.hostName = "liran-main"; # Define your hostname.
@@ -45,25 +46,20 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
   };
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-  
-  services.xserver.desktopManager.gnome = {
-    extraGSettingsOverrides = ''
-      [org.gnome.desktop.screensaver]
-      lock-enabled=false
-      [org/gnome/desktop/interface]
-      color-scheme = "prefer-dark";
-    '';
-  };
-
-  # Configure keymap in X11
   services.xserver = {
+    enable = true;
     layout = "us";
     xkbVariant = "";
+    displayManager.gdm.enable = true;
+    desktopManager.gnome = {
+      enable = true;
+      extraGSettingsOverrides = ''
+        [org.gnome.desktop.screensaver]
+        lock-enabled=false
+        [org/gnome/desktop/interface]
+        color-scheme = "prefer-dark";
+      '';
+    };
   };
 
   # Enable CUPS to print documents.
@@ -117,8 +113,13 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
     neovim
     gnomeExtensions.appindicator
     gnomeExtensions.gsconnect
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
+    firefox 
+    nur.repos.rutherther.firefoxpwa 
+    vscode
+    steam
+    yuzu
+    (callPackage /home/liran/Documents/nixd {})
+    # (builtins.fetchGit {url = "https://github.com/nix-community/nixd.git"; ref = "main";})
   ];
   environment.variables.EDITOR = "nvim";
   # Some programs need SUID wrappers, can be configured further or are

@@ -1,11 +1,13 @@
-{pkgs, lib, ...}: 
+{pkgs, ...}: 
 let nur = import (builtins.fetchTarball "https://github.com/nix-community/NUR/archive/master.tar.gz") {
       inherit pkgs;
     };
 in {
  home = {
-    packages = [pkgs.firefox nur.repos.rutherther.firefoxpwa pkgs.vscode];
     stateVersion = "18.09";
+    packages = [
+      
+    ];
  };
  programs.neovim = {
     enable = true;
@@ -59,13 +61,13 @@ extraConfig = ''
        nano = "hx";
        };
        
-  };  
+  };
   programs.carapace = {enable = true;
    enableNushellIntegration = true;};
   programs.git = {
     enable = true;
-    userName  = "my_git_username";
-    userEmail = "my_git_username@gmail.com";
+    userName  = "Liran Piade";
+    userEmail = "liranpiade@gmail.com";
   };
   nixpkgs.config.allowUnfree = true;
 }
