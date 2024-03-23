@@ -60,11 +60,6 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
     gcc
     nushell
     neovim
-    gnomeExtensions.appindicator
-    gnomeExtensions.gsconnect
-    (pkgs.wrapFirefox (pkgs.firefox-unwrapped.override { pipewireSupport = true;}) {})
-    nur.repos.rutherther.firefoxpwa
-    vscode
     (callPackage /home/liran/Documents/nixd {})
     xorg.xeyes
     wl-clipboard
@@ -73,21 +68,6 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
 
   environment.gnome.excludePackages = with pkgs.gnome; [pkgs.gnome-tour simple-scan gnome-contacts gnome-maps yelp gnome-font-viewer];
   environment.variables.EDITOR = "nvim";
-
-  xdg = {
-    portal = {
-      enable = true;
-        extraPortals = with pkgs; [
-          xdg-desktop-portal-gnome
-        ];
-    };
-  };
-  
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

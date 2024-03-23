@@ -1,20 +1,27 @@
 {pkgs, ...}:
 {
+
+  environment.systemPackages = with pkgs; [
+    (pkgs.wrapFirefox (pkgs.firefox-unwrapped.override { pipewireSupport = true;}) {})
+    nur.repos.rutherther.firefoxpwa
+    vscode
+  ];
+
  services.xserver = {
     enable = true;
     layout = "us,il";
     xkbVariant = "";
-    displayManager.gdm.enable = true;
-    desktopManager.gnome = {
-      enable = true;
-      extraGSettingsOverrides = ''
-        [org.gnome.desktop.screensaver]
-        lock-enabled=false
-        [org/gnome/desktop/interface]
-        color-scheme = "prefer-dark";
-      '';
-    };
+    
     excludePackages = [ pkgs.xterm ];
+  };
+
+  xdg = {
+    portal = {
+      enable = true;
+        extraPortals = with pkgs; [
+          xdg-desktop-portal-gnome
+        ];
+    };
   };
 
   # Enable sound with pipewire.
@@ -32,5 +39,9 @@
     # use the example session manager (no others are packaged yet so this is enabled by default,
     # no need to redefine it in your config for now)
     #media-session.enable = true;
+  };
+
+  programs.firefox.nativeMessagingHosts = {
+    gsconnect = { enable = true; };
   };
 }
