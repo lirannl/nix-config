@@ -6,7 +6,6 @@
 {
   imports =
     [ 
-      # ./secureboot.nix
       #(builtins.getFlake "path:/etc/nixos/secureboot.nix").packages.x86_64-linux.default
       (modulesPath + "/installer/scan/not-detected.nix")
     ];
