@@ -48,7 +48,7 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
   # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
-    layout = "us";
+    layout = "us,il";
     xkbVariant = "";
     displayManager.gdm.enable = true;
     desktopManager.gnome = {
@@ -64,6 +64,8 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Enable sound with pipewire.
   sound.enable = true;
@@ -113,14 +115,17 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
     neovim
     gnomeExtensions.appindicator
     gnomeExtensions.gsconnect
-    firefox 
-    nur.repos.rutherther.firefoxpwa 
+    (pkgs.wrapFirefox (pkgs.firefox-unwrapped.override { pipewireSupport = true;}) {})
+    nur.repos.rutherther.firefoxpwa
     vscode
-    steam
     yuzu
     (callPackage /home/liran/Documents/nixd {})
-    # (builtins.fetchGit {url = "https://github.com/nix-community/nixd.git"; ref = "main";})
+    xorg.xeyes
+    wl-clipboard
   ];
+  # programs.firefox.nativeMessagingHosts = {
+  #   enableGnomeExtensions = true;
+  # };
   environment.variables.EDITOR = "nvim";
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -129,6 +134,16 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
   #   enable = true;
   #   enableSSHSupport = true;
   # };
+
+  xdg = {
+    portal = {
+      enable = true;
+        extraPortals = with pkgs; [
+          xdg-desktop-portal-gnome
+        ];
+    };
+  };
+
 
   # List services that you want to enable:
 

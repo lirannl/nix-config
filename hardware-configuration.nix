@@ -5,8 +5,12 @@
 
 {
   imports =
-    [ (modulesPath + "/installer/scan/not-detected.nix")
+    [ 
+      # ./secureboot.nix
+      #(builtins.getFlake "path:/etc/nixos/secureboot.nix").packages.x86_64-linux.default
+      (modulesPath + "/installer/scan/not-detected.nix")
     ];
+
 
   boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
@@ -40,4 +44,5 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  programs.steam.enable = true;
 }
