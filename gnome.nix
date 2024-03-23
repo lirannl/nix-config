@@ -17,7 +17,7 @@
       enable = true;
       extraGSettingsOverrides = ''
         [org.gnome.desktop.screensaver]
-        lock-enabled=false;
+        lock-enabled=false
         [org/gnome/desktop/interface]
         color-scheme = "prefer-dark";
         [org/gnome/shell]
