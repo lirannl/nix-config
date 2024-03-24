@@ -3,18 +3,29 @@ let nur = import (builtins.fetchTarball "https://github.com/nix-community/NUR/ar
       inherit pkgs;
     };
 in {
- home = {
+  home = {
     stateVersion = "18.09";
     packages = [
       
     ];
- };
- programs.neovim = {
+};
+  dconf.settings = {
+      "org/gnome/desktop/screensaver" = {
+        lock-enabled = false;
+      };
+      "org/gnome/desktop/interface" = {
+        color-scheme = "prefer-dark";
+      };
+      "org/gnome/shell" = {
+        enabled-extensions = [ "gsconnect@andyholmes.github.io" "appindicatorsupport@rgcjonas.gmail.com" "native-window-placement@gnome-shell-extensions.gcampax.github.com" ];
+      };
+  };
+  programs.neovim = {
     enable = true;
     extraConfig = ''
       set number
     '';
- coc.enable = true;
+  coc.enable = true;
     coc.settings = {
       languageserver = {
         nix = {
@@ -23,13 +34,13 @@ in {
         };
       };
     };
-   plugins = with pkgs.vimPlugins; [
+    plugins = with pkgs.vimPlugins; [
       nvim-lspconfig
     ];
   };
   programs.nushell = {
     enable = true;
-extraConfig = ''
+  extraConfig = ''
        let carapace_completer = {|spans|
        carapace $spans.0 nushell $spans | from json
        }
@@ -55,12 +66,11 @@ extraConfig = ''
        append /usr/bin/env
        )
        '';
-       shellAliases = {
-       vi = "hx";
-       vim = "hx";
-       nano = "hx";
-       };
-       
+    shellAliases = {
+    vi = "hx";
+    vim = "hx";
+    nano = "hx";
+    };       
   };
   programs.carapace = {enable = true;
    enableNushellIntegration = true;};

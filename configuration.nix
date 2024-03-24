@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz"; in
 {
   imports = [
@@ -32,6 +32,21 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
   documentation.nixos.enable = false;
   services.printing.enable = false;
 
+  services.avahi = {
+    publish = {
+      userServices = true;
+      enable = true;
+    };
+    openFirewall = true;
+    ipv4 = true;
+    ipv6 = true;
+  };
+
+  services.zerotierone = {
+    enable = true;
+    joinNetworks = [ "856127940cacf0c1" ];
+  };
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -39,7 +54,7 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
     isNormalUser = true;
     description = "Liran Piade";
     shell = pkgs.nushell;
-    extraGroups = [ "networkmanager" "wheel" "adbusers" ];
+    extraGroups = [ "networkmanager" "wheel" "adbusers" "liran" ];
   };
   home-manager.users.liran = import ./liran_home.nix;
 
@@ -61,10 +76,14 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
     nushell
     neovim
     (callPackage /home/liran/Documents/nixd {})
+    libva
+    nil
     xorg.xeyes
     wl-clipboard
     spotify
   ];
+
+  hardware.opengl.driSupport32Bit = true;
 
   environment.gnome.excludePackages = with pkgs.gnome; [pkgs.gnome-tour simple-scan gnome-contacts gnome-maps yelp gnome-font-viewer];
   environment.variables.EDITOR = "nvim";
