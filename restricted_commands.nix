@@ -12,10 +12,13 @@ in {
     
     extraGroups = [ ];
     openssh = {
-      authorizedKeys.keys = [
-        ''command="sudo ${restricted}/bin/restricted_commands" ${(import ./local_variables.nix).ha_key}''
-      ];
+      authorizedKeys.keys = map 
+      (key: ''command="sudo ${restricted}/bin/restricted_commands" ${key}'') 
+      (import ./local_variables.nix).ha_keys;
     };
   };
-  security.sudo.extraConfig = ''ALL ALL = (root) NOPASSWD: ${restricted}/bin/restricted_commands'';
+  security.sudo.extraConfig = ''
+  Defaults!${restricted}/bin/restricted_commands env_keep=SSH_ORIGINAL_COMMAND
+  ha ALL=(root) NOPASSWD:${restricted}/bin/restricted_commands
+  '';
 }

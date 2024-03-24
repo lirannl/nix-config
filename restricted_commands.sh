@@ -1,5 +1,6 @@
 #!/run/current-system/sw/bin/bash
-case $1 in
+args=($SSH_ORIGINAL_COMMAND)
+case ${args[0]} in
     "sleep")
         systemctl suspend
         ;;
