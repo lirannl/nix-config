@@ -2,8 +2,21 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ pkgs, ... }:
-let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz"; in
+{ pkgs, config, ... }:
+let 
+  home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz";
+  # logi_fn = builtins.fetchGit { url = "https://github.com/lirannl/logi_keyboard_fn.git"; rev = "b8b0c97a4a1a8fbdba73044b2c3b3c51284b5471"; };
+  unstableTarball =
+    fetchTarball
+      "https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz";
+  # logi_keyboard_fn = import (pkgs.fetchFromGitHub {
+  #     owner = "lirannl";
+  #     repo = "logi_keyboard_fn";
+  #     rev = "f2741e2ed8a79897229039a532e4e91f356e3185";
+  #     hash = "sha256-/i+bnkeMWIxSPsEBj7LREnDmMW6xnXnnXORX4o6nGIc=";
+  #   });
+  logi_keyboard_fn = import "/home/liran/Documents/logi_keyboard_fn";
+in
 {
   imports = [
     ./local.nix
@@ -59,13 +72,22 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
   home-manager.users.liran = import ./liran_home.nix;
 
   # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.packageOverrides = pkgs: {
-    nur = import (builtins.fetchTarball "https://github.com/nix-community/NUR/archive/master.tar.gz") {
-      inherit pkgs;
+  nixpkgs.config =
+  {
+    allowUnfree = true;
+    packageOverrides = pkgs: {
+      nur = import (builtins.fetchTarball "https://github.com/nix-community/NUR/archive/master.tar.gz") {
+        inherit pkgs;
+      };
+      unstable = import unstableTarball {
+        config = config.nixpkgs.config;
+      };
     };
   };
   programs.adb.enable = true;
+  services.resolved = {
+    enable = true;
+  };
   
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -81,12 +103,15 @@ let home-manager = builtins.fetchTarball "https://github.com/nix-community/home-
     xorg.xeyes
     wl-clipboard
     spotify
+    logi_keyboard_fn.x86_64-linux.packages.default
   ];
 
   hardware.opengl.driSupport32Bit = true;
 
   environment.gnome.excludePackages = with pkgs.gnome; [pkgs.gnome-tour simple-scan gnome-contacts gnome-maps yelp gnome-font-viewer];
   environment.variables.EDITOR = "nvim";
+
+  services.udev.extraRules = "ACTION==\"add\", KERNEL==\"hidraw[0-9]*\", RUN+=\"${logi_keyboard_fn.x86_64-linux.packages.default}/bin/fn_activator\"";
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

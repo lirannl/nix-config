@@ -14,8 +14,16 @@ in
 
     systemd.user.services = {
       sunshine = {
-        Unit.Description = "Sunshine is a Game stream host for Moonlight.";
-        Service.ExecStart = "${sunshineService.package}/bin/sunshine";
+        Unit = {
+          Description = "Sunshine is a Game stream host for Moonlight.";
+          StartLimitIntervalSec=500;
+          StartLimitBurst=5;
+        };
+        Service = {
+          ExecStart = "/${pkgs.sunshine}/bin/sunshine";
+          Restart = "on-failure";
+          RestartSec = "5s";
+        };
         Install.WantedBy = [ "graphical-session.target" ];
       };
     };

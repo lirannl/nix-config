@@ -1,5 +1,6 @@
 local_modules.nix
 local_variables.nix
 local.nix
+flake.nix
 local_home.nix
 hardware-configuration.nix
