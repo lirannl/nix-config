@@ -5,17 +5,15 @@
 { pkgs, config, ... }:
 let 
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz";
-  # logi_fn = builtins.fetchGit { url = "https://github.com/lirannl/logi_keyboard_fn.git"; rev = "b8b0c97a4a1a8fbdba73044b2c3b3c51284b5471"; };
   unstableTarball =
     fetchTarball
       "https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz";
-  # logi_keyboard_fn = import (pkgs.fetchFromGitHub {
-  #     owner = "lirannl";
-  #     repo = "logi_keyboard_fn";
-  #     rev = "f2741e2ed8a79897229039a532e4e91f356e3185";
-  #     hash = "sha256-/i+bnkeMWIxSPsEBj7LREnDmMW6xnXnnXORX4o6nGIc=";
-  #   });
-  logi_keyboard_fn = import "/home/liran/Documents/logi_keyboard_fn";
+  logi_keyboard_fn = import (pkgs.fetchFromGitHub {
+      owner = "lirannl";
+      repo = "logi_keyboard_fn";
+      rev = "055dcdb592825055130242c155d981842886c467";
+      hash = "sha256-lIGTsb+aGwNx3LLLg56KeBKtOPZ3o5MGpsmTRD5dwHo=";
+    });
 in
 {
   imports = [

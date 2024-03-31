@@ -10,7 +10,6 @@
     gnomeExtensions.appindicator
     gnomeExtensions.gsconnect
     gnome.dconf-editor
-    discord
   ];
 
   services.xserver = {

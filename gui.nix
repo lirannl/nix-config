@@ -5,6 +5,7 @@
     (pkgs.wrapFirefox (pkgs.firefox-unwrapped.override { pipewireSupport = true;}) {})
     nur.repos.rutherther.firefoxpwa
     vscode
+    vesktop
   ];
 
  services.xserver = {
