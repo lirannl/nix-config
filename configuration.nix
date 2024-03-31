@@ -95,7 +95,6 @@ in
     gcc
     nushell
     neovim
-    (callPackage /home/liran/Documents/nixd {})
     libva
     nil
     xorg.xeyes
