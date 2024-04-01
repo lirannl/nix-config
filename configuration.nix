@@ -8,18 +8,14 @@ let
   unstableTarball =
     fetchTarball
       "https://github.com/NixOS/nixpkgs-channels/archive/nixos-unstable.tar.gz";
-  logi_keyboard_fn = import (pkgs.fetchFromGitHub {
-      owner = "lirannl";
-      repo = "logi_keyboard_fn";
-      rev = "055dcdb592825055130242c155d981842886c467";
-      hash = "sha256-lIGTsb+aGwNx3LLLg56KeBKtOPZ3o5MGpsmTRD5dwHo=";
-    });
+  logi_keyboard_fn = (builtins.getFlake "github:lirannl/logi_keyboard_fn/055dcdb592825055130242c155d981842886c467")."${builtins.currentSystem}";
 in
 {
   imports = [
     ./local.nix
     ./local_modules.nix
     (import "${home-manager}/nixos")
+    # logi_keyboard_fn.nixosModules
   ];
 
   # Set your time zone.
@@ -100,7 +96,7 @@ in
     xorg.xeyes
     wl-clipboard
     spotify
-    logi_keyboard_fn.x86_64-linux.packages.default
+    logi_keyboard_fn.packages.default
   ];
 
   hardware.opengl.driSupport32Bit = true;
@@ -108,7 +104,7 @@ in
   environment.gnome.excludePackages = with pkgs.gnome; [pkgs.gnome-tour simple-scan gnome-contacts gnome-maps yelp gnome-font-viewer];
   environment.variables.EDITOR = "nvim";
 
-  services.udev.extraRules = "ACTION==\"add\", KERNEL==\"hidraw[0-9]*\", RUN+=\"${logi_keyboard_fn.x86_64-linux.packages.default}/bin/fn_activator\"";
+  services.udev.extraRules = "ACTION==\"add\", KERNEL==\"hidraw[0-9]*\", RUN+=\"${logi_keyboard_fn.packages.default}/bin/fn_activator\"";
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

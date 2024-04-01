@@ -1,6 +1,6 @@
-{pkgs, lib, ...}: 
+{pkgs, ...}: 
 {
-  boot.initrd.kernelModules = [ "amdgpu" ];
+  boot.initrd.kernelModules = [ "amdgpu" "uinput" ];
   services.xserver.videoDrivers = [ "amdgpu" ];
   systemd.tmpfiles.rules = [
     "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"
@@ -11,14 +11,15 @@
       rocmPackages.clr.icd 
       vaapiVdpau
       libvdpau-va-gl
+      wine
     ];
   };
   
-
   programs.steam.enable = true;
   environment.systemPackages = with pkgs; [
     yuzu
     sunshine
+    steam-rom-manager
   ];
   networking.firewall = {
     allowedTCPPortRanges = [

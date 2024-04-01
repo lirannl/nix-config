@@ -6,6 +6,8 @@
     nur.repos.rutherther.firefoxpwa
     vscode
     vesktop
+    onedrive
+    qt6ct
   ];
 
  services.xserver = {

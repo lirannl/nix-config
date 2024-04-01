@@ -20,6 +20,7 @@ in {
         enabled-extensions = [ "gsconnect@andyholmes.github.io" "appindicatorsupport@rgcjonas.gmail.com" "native-window-placement@gnome-shell-extensions.gcampax.github.com" ];
       };
   };
+  
   programs.neovim = {
     enable = true;
     extraConfig = ''
@@ -38,9 +39,10 @@ in {
       nvim-lspconfig
     ];
   };
+  
   programs.nushell = {
     enable = true;
-  extraConfig = ''
+    extraConfig = ''
        let carapace_completer = {|spans|
        carapace $spans.0 nushell $spans | from json
        }
@@ -72,12 +74,21 @@ in {
     nano = "hx";
     };       
   };
-  programs.carapace = {enable = true;
-   enableNushellIntegration = true;};
+
+  programs.carapace = {
+    enable = true;
+    enableNushellIntegration = true;
+  };
+  
   programs.git = {
     enable = true;
     userName  = "Liran Piade";
     userEmail = "liranpiade@gmail.com";
   };
+  
   nixpkgs.config.allowUnfree = true;
+  
+  home.sessionVariables = {
+    QT_QPA_PLATFORMTHEME = "qt6ct";
+  };
 }

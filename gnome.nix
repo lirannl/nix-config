@@ -28,4 +28,9 @@
       { from = 1714; to = 1764; }
     ];
   };
+
+  nixpkgs.config.qt = {
+    enable = true;
+    platformTheme = "qt6ct"; 
+  };
 }
